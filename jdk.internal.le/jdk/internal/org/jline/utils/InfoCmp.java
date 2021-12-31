@@ -138,7 +138,7 @@ public final class InfoCmp {
         delete_character,           // delete_character, dch1, dc
         delete_line,                // delete_line, dl1, dl
         dial_phone,                 // dial_phone, dial, DI
-        dis_status_line,            // dis_status_line, dsl, ds
+        dis_status_line,            // dis_status_line, club.smileboy.dsl, ds
         display_clock,              // display_clock, dclk, DK
         down_half_line,             // down_half_line, hd, hd
         ena_acs,                    // ena_acs, enacs, eA

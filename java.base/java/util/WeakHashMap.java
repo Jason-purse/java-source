@@ -176,6 +176,7 @@ public class WeakHashMap<K,V>
 
     /**
      * Reference queue for cleared WeakEntries
+     * 引用队列,用来清理.. 弱引用项.
      */
     private final ReferenceQueue<Object> queue = new ReferenceQueue<>();
 

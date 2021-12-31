@@ -434,7 +434,7 @@ public class DragSource implements Serializable {
      * to represent the drag over feedback for this drag operation, but
      * {@code NullPointerException} is not thrown.
      * <p>
-     * If {@code dsl} is {@code null}, no drag source listener
+     * If {@code club.smileboy.dsl} is {@code null}, no drag source listener
      * is registered with the created {@code DragSourceContext},
      * but {@code NullPointerException} is not thrown.
      *

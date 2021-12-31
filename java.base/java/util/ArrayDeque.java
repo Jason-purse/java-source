@@ -41,15 +41,26 @@ import java.util.function.Predicate;
 import jdk.internal.access.SharedSecrets;
 
 /**
- * Resizable-array implementation of the {@link Deque} interface.  Array
- * deques have no capacity restrictions; they grow as necessary to support
- * usage.  They are not thread-safe; in the absence of external
+ * Resizable-array implementation of the {@link Deque} interface.
+ * 针对栈的可变尺寸的数组实现
+ * Array deques have no capacity restrictions;
+ * they grow as necessary to support
+ * usage.
+ * 数组栈没有容量限制,必要时为了支持使用而增长.
+ * They are not thread-safe; in the absence of external
  * synchronization, they do not support concurrent access by multiple threads.
- * Null elements are prohibited.  This class is likely to be faster than
+ * Null elements are prohibited.
+ * 它们不是线程安全的,缺乏同步,它们不支持在多个线程中并发访问,空元素是禁止(prohibited)的.
+ * 此类如果像栈一样使用,它的效率比Stack更快,当它作为一个队列使用时,它比LinkedList快.
+ * This class is likely to be faster than
  * {@link Stack} when used as a stack, and faster than {@link LinkedList}
  * when used as a queue.
  *
- * <p>Most {@code ArrayDeque} operations run in amortized constant time.
+ * // 大多数时候,ArrayDeque的操作是一个常量时间内可消化的.
+ * <p>Most {@code ArrayDeque} operations run in AMORTIZED constant time.
+ * // 除了删除.. / ....
+ * // 这种效率比较低
+ * // 以及批量操作,这样的操作导致时间呈线性增长.
  * Exceptions include
  * {@link #remove(Object) remove},
  * {@link #removeFirstOccurrence removeFirstOccurrence},
@@ -59,25 +70,40 @@ import jdk.internal.access.SharedSecrets;
  * and the bulk operations, all of which run in linear time.
  *
  * <p>The iterators returned by this class's {@link #iterator() iterator}
- * method are <em>fail-fast</em>: If the deque is modified at any time after
- * the iterator is created, in any way except through the iterator's own
+ * method are <em>fail-fast</em>:
+ * If the deque is modified at any time after
+ * the iterator is created,
+ * // 迭代器快速失败,迭代器的任何一次remove 都会爆发异常..
+ * 迭代器通常会生成一个 ConcurrentModificationException 异常.
+ * in any way except through the iterator's own
  * {@code remove} method, the iterator will generally throw a {@link
- * ConcurrentModificationException}.  Thus, in the face of concurrent
+ * ConcurrentModificationException}.
+ * 因此在并发修改的场景下,迭代器会快速并干净的失败. 而不是
+ * 在未来可能在不知道的时候可能存在一些无法证明、以外的的行为..
+ * Thus, in the face of concurrent
  * modification, the iterator fails quickly and cleanly, rather than risking
  * arbitrary, non-deterministic behavior at an undetermined time in the
  * future.
  *
+ * 注意到一个迭代器的快速行为不能够得到保证(at it is 事实上),通常来说,
+ * 在未同步下并发修改不能够做出任何保证.
  * <p>Note that the fail-fast behavior of an iterator cannot be guaranteed
  * as it is, generally speaking, impossible to make any hard guarantees in the
- * presence of unsynchronized concurrent modification.  Fail-fast iterators
+ * presence of unsynchronized concurrent modification.
+ * 快速失败会尽最大努力抛出一个并发修改异常-
+ * Fail-fast iterators
  * throw {@code ConcurrentModificationException} on a best-effort basis.
+ * 因此..他可能会错误的写入一个程序(-根据异常 对于它的不正确性写入错误的信息)
  * Therefore, it would be wrong to write a program that depended on this
  * exception for its correctness: <i>the fail-fast behavior of iterators
  * should be used only to detect bugs.</i>
+ * 快速失败行为的迭代器仅仅被用来检测bugs;
  *
  * <p>This class and its iterator implement all of the
  * <em>optional</em> methods of the {@link Collection} and {@link
  * Iterator} interfaces.
+ *
+ * 这个类以及它的迭代器都是实现了Collection / Iterator的部分方法..
  *
  * <p>This class is a member of the
  * <a href="{@docRoot}/java.base/java/util/package-summary.html#CollectionsFramework">
@@ -97,7 +123,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      * for (int i = start; i < end; i++) ... elements[i]
      *
      * Because in a circular array, elements are in general stored in
-     * two disjoint such slices, we help the VM by writing unusual
+     * two disjoint(不相交的.) such slices, we help the VM by writing unusual
      * nested loops for all traversals over the elements.  Having only
      * one hot inner loop body instead of two or three eases human
      * maintenance and encourages VM loop inlining into the caller.
@@ -675,6 +701,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
         return new DescendingIterator();
     }
 
+    // 私有迭代器..
     private class DeqIterator implements Iterator<E> {
         /** Index of element to be returned by subsequent call to next. */
         int cursor;
