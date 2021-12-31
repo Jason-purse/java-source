@@ -641,14 +641,14 @@ public class TransferHandler implements Serializable {
     /**
      * image for the {@code startDrag} method
      *
-     * @see java.awt.dnd.DragGestureEvent#startDrag(Cursor dragCursor, Image dragImage, Point imageOffset, Transferable transferable, DragSourceListener dsl)
+     * @see java.awt.dnd.DragGestureEvent#startDrag(Cursor dragCursor, Image dragImage, Point imageOffset, Transferable transferable, DragSourceListener club.smileboy.dsl)
      */
     private  Image dragImage;
 
     /**
      * anchor offset for the {@code startDrag} method
      *
-     * @see java.awt.dnd.DragGestureEvent#startDrag(Cursor dragCursor, Image dragImage, Point imageOffset, Transferable transferable, DragSourceListener dsl)
+     * @see java.awt.dnd.DragGestureEvent#startDrag(Cursor dragCursor, Image dragImage, Point imageOffset, Transferable transferable, DragSourceListener club.smileboy.dsl)
      */
     private  Point dragImageOffset;
 

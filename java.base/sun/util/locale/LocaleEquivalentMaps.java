@@ -191,7 +191,7 @@ final class LocaleEquivalentMaps {
         singleEquivMap.put("sgn-ch-de", "sgg");
         singleEquivMap.put("sgn-co", "csn");
         singleEquivMap.put("sgn-de", "gsg");
-        singleEquivMap.put("sgn-dk", "dsl");
+        singleEquivMap.put("sgn-dk", "club.smileboy.dsl");
         singleEquivMap.put("sgn-es", "ssp");
         singleEquivMap.put("sgn-fr", "fsl");
         singleEquivMap.put("sgn-gb", "bfi");
