@@ -61,6 +61,7 @@ import java.util.Arrays;
  * @see     java.io.StreamTokenizer#TT_EOF
  * @since   1.0
  */
+//用来解析 security.policy等文件的专属工具tokenizer;
 
 public class StreamTokenizer {
 
