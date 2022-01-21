@@ -3,11 +3,12 @@ package Log
 import java.util.logging.Level
 import java.util.logging.LogRecord
 import java.util.logging.Logger
+import kotlin.math.log
 
 fun main() {
     // Logger
     var global = Logger.getGlobal()
-    global.log(Level.INFO,"this is log records!")
+    global.log(Level.INFO,"this is log records!");
 
     var logger = Logger.getLogger("com.logging.parent")
     logger.level = Level.ALL
