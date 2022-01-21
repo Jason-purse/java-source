@@ -43,8 +43,8 @@ import java.io.Serializable;
  * across threads, the set of variables may grow dynamically to reduce
  * contention. Method {@link #sum} (or, equivalently, {@link
  * #longValue}) returns the current total combined across the
- * variables maintaining the sum.
- *
+ * variables maintaining the sum. // 对线程并发访问同一个原子值 压力较大,如果100个线程同时对一个原子值进行累加,我们可以将它
+ * // 拆开为多个线程同时对多个原子值进行多次累加,提高性能...
  * <p>This class is usually preferable to {@link AtomicLong} when
  * multiple threads update a common sum that is used for purposes such
  * as collecting statistics, not for fine-grained synchronization
