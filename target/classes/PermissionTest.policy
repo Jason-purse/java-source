@@ -1,0 +1,4 @@
+grant 
+{
+   permission securityTests.WordCheckPermission "sex,drugs,C++", "avoid";
+};
