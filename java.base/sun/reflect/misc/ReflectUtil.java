@@ -108,10 +108,11 @@ public final class ReflectUtil {
 
     /**
      * Checks package access on the given class.
-     *
+     *  给定类的包访问检查..
      * If it is a {@link Proxy#isProxyClass(java.lang.Class)} that implements
      * a non-public interface (i.e. may be in a non-restricted package),
      * also check the package access on the proxy interfaces.
+     * 如果它是一个代理类,实现了非公开接口(例如: 也许在非限制包中),, 也会检查代理接口的包访问...
      */
     public static void checkPackageAccess(Class<?> clazz) {
         SecurityManager s = System.getSecurityManager();

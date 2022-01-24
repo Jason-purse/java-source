@@ -1,10 +1,18 @@
 package concurrent.atomic
 
 import kotlinx.coroutines.*
+import org.junit.jupiter.api.Test
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.LongAdder
+import java.util.function.IntBinaryOperator
+public class AtomicTests {
+    @Test
+    fun test() {
+        tested()
+    }
+}
 
-fun main() = runBlocking {
+fun tested() = runBlocking {
 
     // atomic 仅仅是一个原子性的机器指令代码执行...
     val atomicInteger = AtomicInteger(0)
@@ -12,6 +20,15 @@ fun main() = runBlocking {
     println(atomicInteger.get())
     val adder = LongAdder()
     accumulate(adder)
+
+    // cas 的lambda 形式..
+    atomicInteger.accumulateAndGet(3) { left: Int, right: Int ->
+        if(right == 0) {
+            3
+        }
+        else
+            left
+    }
 
 }
 

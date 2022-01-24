@@ -1138,6 +1138,8 @@ public class SecurityManager {
     // The non-exported packages in modules defined to the boot or platform
     // class loaders. A non-exported package is a package that is not exported
     // or is only exported to specific modules.
+    // 没有暴露的所有定义在引导类加载器的模块(包)都会保存,一个未暴露的包是一个没有暴露的包 或者
+    // 仅仅暴露了指定的模块 ..
     private static final Map<String, Boolean> nonExportedPkgs = new ConcurrentHashMap<>();
     static {
         addNonExportedPackages(ModuleLayer.boot());

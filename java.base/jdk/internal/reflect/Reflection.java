@@ -56,7 +56,7 @@ public class Reflection {
 
         methodFilterMap = new HashMap<>();
     }
-
+    // 返回调用这个方法的方法的调用者的类..
     /** Returns the class of the caller of the method calling this method,
         ignoring frames associated with java.lang.reflect.Method.invoke()
         and its implementation. */

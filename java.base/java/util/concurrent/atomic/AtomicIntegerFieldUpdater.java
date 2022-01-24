@@ -51,21 +51,20 @@ import java.lang.invoke.VarHandle;
 /**
  * A reflection-based utility that enables atomic updates to
  * designated {@code volatile int} fields of designated classes.
- * This class is designed for use in atomic data structures in which
- * several fields of the same node are independently subject to atomic
+ * This class is designed for use in atomic data structures in which 基于反射的工具类(对指定类的指定int 字段进行原子更新)...
+ * several fields of the same node are independently subject to atomic  这个class(被设计来 进行相同对象的各个独立字段节点的原子更新..
  * updates.
  *
- * <p>Note that the guarantees of the {@code compareAndSet}
- * method in this class are weaker than in other atomic classes.
- * Because this class cannot ensure that all uses of the field
+ * <p>Note that the guarantees of the {@code compareAndSet}  这里的compareAndSet 方法 的担保是弱于其他原子类的,因为这个类不能够确保此字段的所有使用都是
+ * method in this class are weaker than in other atomic classes. 适合原子访问的目的,他仅仅保证原子性的是在相同更新器上 尊敬/关心 使用了其他的原子调用(例如 compareAndSet)
+ * Because this class cannot ensure that all uses of the field  // set...
  * are appropriate for purposes of atomic access, it can
  * guarantee atomicity only with respect to other invocations of
  * {@code compareAndSet} and {@code set} on the same updater.
- *
+ * 类型参数的对象参数不是这个类的一个实例(如果传给newUpdater 将会抛出一个ClassCastException)
  * <p>Object arguments for parameters of type {@code T} that are not
  * instances of the class passed to {@link #newUpdater} will result in
  * a {@link ClassCastException} being thrown.
- *
  * @since 1.5
  * @author Doug Lea
  * @param <T> The type of the object holding the updatable field
@@ -399,12 +398,16 @@ public abstract class AtomicIntegerFieldUpdater<T> {
                         }
                     });
                 modifiers = field.getModifiers();
+                // 确保调用者能够正确的访问到目标对象的方法..
                 sun.reflect.misc.ReflectUtil.ensureMemberAccess(
                     caller, tclass, null, modifiers);
                 ClassLoader cl = tclass.getClassLoader();
                 ClassLoader ccl = caller.getClassLoader();
+                // 这里在判断类加载器层级...
                 if ((ccl != null) && (ccl != cl) &&
                     ((cl == null) || !isAncestor(cl, ccl))) {
+                    //由于双亲委派加载机制..
+                    // 如果ccl 不是c1的父亲,那么我们需要判断此调用是否能够访问对应的包名..
                     sun.reflect.misc.ReflectUtil.checkPackageAccess(tclass);
                 }
             } catch (PrivilegedActionException pae) {
@@ -416,6 +419,7 @@ public abstract class AtomicIntegerFieldUpdater<T> {
             if (field.getType() != int.class)
                 throw new IllegalArgumentException("Must be integer type");
 
+            // 必须是一个volatile 变量...
             if (!Modifier.isVolatile(modifiers))
                 throw new IllegalArgumentException("Must be volatile type");
 
@@ -426,18 +430,23 @@ public abstract class AtomicIntegerFieldUpdater<T> {
             // If the updater refers to a protected field of a declaring class
             // outside the current package, the receiver argument will be
             // narrowed to the type of the accessing class.
+            // 访问受保护字段成员是被限制为访问类的接收者或者它的子类 ..
+//            并且此访问类必须是子类或者与当前受保护成员的定义类的包兄弟的一个类..
+            // 如果这个更新者引用了一个位于此包之外的声明类,这个接收者参数将会缩小为访问类的类型..
+            // 就是判断是否为子类,是? 那就是子类  / 否则就是特定类型...
             this.cclass = (Modifier.isProtected(modifiers) &&
                            tclass.isAssignableFrom(caller) &&
                            !isSamePackage(tclass, caller))
                           ? caller : tclass;
             this.tclass = tclass;
-            this.offset = U.objectFieldOffset(field);
+            this.offset = U.objectFieldOffset(field); // 算出对象偏距..
         }
 
         /**
          * Returns true if the second classloader can be found in the first
          * classloader's delegation chain.
-         * Equivalent to the inaccessible: first.isAncestor(second).
+         * 如果第二个类加载能够在第一个类加载器的代理链中发现.. 那么说明第二个是第一个的父亲..
+         * Equivalent to the inaccessible: first.isAncestor(second).          * 等价于不可访问,first.isAncestor..
          */
         private static boolean isAncestor(ClassLoader first, ClassLoader second) {
             ClassLoader acl = first;
