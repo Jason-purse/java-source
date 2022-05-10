@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;

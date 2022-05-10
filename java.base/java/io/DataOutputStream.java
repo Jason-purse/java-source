@@ -350,7 +350,7 @@ class DataOutputStream extends FilterOutputStream implements DataOutput {
 
         /* use charAt instead of copying String to char array */
         for (int i = 0; i < strlen; i++) {
-            c = str.charAt(i);
+            c = str.charAt(i); //utf-16 编码
             if ((c >= 0x0001) && (c <= 0x007F)) {
                 utflen++;
             } else if (c > 0x07FF) {
@@ -368,31 +368,31 @@ class DataOutputStream extends FilterOutputStream implements DataOutput {
         if (out instanceof DataOutputStream) {
             DataOutputStream dos = (DataOutputStream)out;
             if(dos.bytearr == null || (dos.bytearr.length < (utflen+2)))
-                dos.bytearr = new byte[(utflen*2) + 2];
+                dos.bytearr = new byte[(utflen*2) + 2]; // 长度直接翻倍 ...
             bytearr = dos.bytearr;
         } else {
             bytearr = new byte[utflen+2];
         }
-
+        // 前两个字节写入字节的长度 ...
         bytearr[count++] = (byte) ((utflen >>> 8) & 0xFF);
         bytearr[count++] = (byte) ((utflen >>> 0) & 0xFF);
-
+        // 然后采用utf-8 格式写入 ...
         int i=0;
         for (i=0; i<strlen; i++) {
            c = str.charAt(i);
            if (!((c >= 0x0001) && (c <= 0x007F))) break;
            bytearr[count++] = (byte) c;
         }
-
+        // 最坏的结果 就是 3倍长度 .. 但是如果存在2个字节的  不会超过最坏长度3倍
         for (;i < strlen; i++){
             c = str.charAt(i);
             if ((c >= 0x0001) && (c <= 0x007F)) {
                 bytearr[count++] = (byte) c;
-
-            } else if (c > 0x07FF) {
-                bytearr[count++] = (byte) (0xE0 | ((c >> 12) & 0x0F));
-                bytearr[count++] = (byte) (0x80 | ((c >>  6) & 0x3F));
-                bytearr[count++] = (byte) (0x80 | ((c >>  0) & 0x3F));
+            // 这里强烈看一下unicode 编码方式,否则无法理解 ... 1110xxxx 10xxxxxx 10xxxxxx
+            } else if (c > 0x07FF) { // 大于0x07FF 3位存储...(采用unicode 编码形式进行处理), 如果unicode 超过 16位 可能会出现断位???
+                bytearr[count++] = (byte) (0xE0 | ((c >> 12) & 0x0F)); // 111 xxx(高位还剩4位 不会大于16)
+                bytearr[count++] = (byte) (0x80 | ((c >>  6) & 0x3F)); // 10 xxxxx(还剩6位 不会大于3F)
+                bytearr[count++] = (byte) (0x80 | ((c >>  0) & 0x3F)); // 10 xxx(还剩6位 不会大于3F)
             } else {
                 bytearr[count++] = (byte) (0xC0 | ((c >>  6) & 0x1F));
                 bytearr[count++] = (byte) (0x80 | ((c >>  0) & 0x3F));

@@ -28,4 +28,5 @@ class CompletableFutureTests {
             )
             .get() // 阻塞
     }
+
 }
